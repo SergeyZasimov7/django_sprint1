@@ -1,6 +1,7 @@
+from django.http import HttpResponse
+
 from django.shortcuts import render
 
-# Create your views here.
 posts = [
     {
         'id': 0,
@@ -46,18 +47,17 @@ posts = [
 
 
 def index(request):
-    template = 'blog/index.html'
-    context = {
-        'posts': reversed(posts)
-    }
-    return render(request, template, context)
+    return render(request, 'blog/index.html', {
+                'posts': reversed(posts)})
 
 
-def post_detail(request, id):
-    context = {'post': posts[id], }
-    return render(request, 'blog/detail.html', context)
+def post_detail(request, post_id):
+    if post_id < len(posts):
+        return render(request, 'blog/detail.html', {'post': posts[post_id]})
+    else:
+        return HttpResponse('Post not found', status=404)
 
 
 def category_posts(request, category_slug):
-    context = {'category_slug': category_slug}
-    return render(request, 'blog/category.html', context)
+    return render(request, 'blog/category.html', {
+                'category_slug': category_slug})
