@@ -1,5 +1,3 @@
-from django.http import HttpResponse
-
 from django.shortcuts import render
 
 posts = [
@@ -52,10 +50,10 @@ def index(request):
 
 
 def post_detail(request, post_id):
-    if post_id < len(posts):
-        return render(request, 'blog/detail.html', {'post': posts[post_id]})
-    else:
-        return HttpResponse('Post not found', status=404)
+    for post in posts:
+        if post['id'] == post_id:
+            return render(request, 'blog/detail.html', {'post': post})
+    raise ValueError('Post not found')
 
 
 def category_posts(request, category_slug):
